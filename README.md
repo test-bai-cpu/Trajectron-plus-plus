@@ -24,7 +24,7 @@ git submodule update # Fetching all of the data from the submodules at the speci
 First, we'll create a conda environment to hold the dependencies.
 ```
 conda create --name trajectron++ python=3.6 -y
-source activate trajectron++
+conda activate trajectron++
 pip install -r requirements.txt
 ```
 
@@ -62,6 +62,11 @@ In case you also want a validation set generated (by default this will just prod
 To train a model on the ETH and UCY Pedestrian datasets, you can execute a version of the following command from within the `trajectron/` directory.
 ```
 python train.py --eval_every 10 --vis_every 1 --train_data_dict <dataset>_train.pkl --eval_data_dict <dataset>_val.pkl --offline_scene_graph yes --preprocess_workers 5 --log_dir ../experiments/pedestrians/models --log_tag <desired tag> --train_epochs 100 --augment --conf <desired model configuration>
+```
+
+In Edinburgh dataset case, the command is:
+```
+python train.py --eval_every 10 --vis_every 1 --train_data_dict edin_train.pkl --eval_data_dict edin_val.pkl --offline_scene_graph yes --preprocess_workers 5 --log_dir ../experiments/pedestrians/models --log_tag edin_1 --train_epochs 100 --augment --conf ../experiments/pedestrians/models/edin_attention_radius_3/config.json
 ```
 
 For example, a fully-fleshed out version of this command to train a model without dynamics integration for evaluation on the ETH - University scene would look like:

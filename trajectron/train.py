@@ -22,6 +22,7 @@ from tensorboardX import SummaryWriter
 
 if not torch.cuda.is_available() or args.device == 'cpu':
     args.device = torch.device('cpu')
+    # print("yufei test1")
 else:
     if torch.cuda.device_count() == 1:
         # If you have CUDA_VISIBLE_DEVICES set, which you should,
@@ -34,6 +35,7 @@ else:
 if args.eval_device is None:
     args.eval_device = torch.device('cpu')
 
+# print(args.device)
 # This is needed for memory pinning using a DataLoader (otherwise memory is pinned to cuda:0 by default)
 torch.cuda.set_device(args.device)
 

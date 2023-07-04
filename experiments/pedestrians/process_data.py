@@ -82,7 +82,8 @@ nl = 0
 l = 0
 maybe_makedirs('../processed')
 data_columns = pd.MultiIndex.from_product([['position', 'velocity', 'acceleration'], ['x', 'y']])
-for desired_source in ['eth', 'hotel', 'univ', 'zara1', 'zara2']:
+# for desired_source in ['eth', 'hotel', 'univ', 'zara1', 'zara2']:
+for desired_source in ['edin']:
     for data_class in ['train', 'val', 'test']:
         env = Environment(node_type_list=['PEDESTRIAN'], standardization=standardization)
         attention_radius = dict()
@@ -94,17 +95,17 @@ for desired_source in ['eth', 'hotel', 'univ', 'zara1', 'zara2']:
 
         for subdir, dirs, files in os.walk(os.path.join('raw', desired_source, data_class)):
             for file in files:
-                if file.endswith('.txt'):
+                if file.endswith('.csv'):
                     input_data_dict = dict()
                     full_data_path = os.path.join(subdir, file)
                     print('At', full_data_path)
 
-                    data = pd.read_csv(full_data_path, sep='\t', index_col=False, header=None)
+                    data = pd.read_csv(full_data_path, sep=',', index_col=False, header=None)
                     data.columns = ['frame_id', 'track_id', 'pos_x', 'pos_y']
                     data['frame_id'] = pd.to_numeric(data['frame_id'], downcast='integer')
                     data['track_id'] = pd.to_numeric(data['track_id'], downcast='integer')
 
-                    data['frame_id'] = data['frame_id'] // 10
+                    # data['frame_id'] = data['frame_id'] // 10
 
                     data['frame_id'] -= data['frame_id'].min()
 
@@ -124,6 +125,12 @@ for desired_source in ['eth', 'hotel', 'univ', 'zara1', 'zara2']:
 
                         node_df = data[data['node_id'] == node_id]
                         assert np.all(np.diff(node_df['frame_id']) == 1)
+                        # try:
+                        #     if not np.all(np.diff(node_df['frame_id']) == 1): 
+                        #         raise Exception
+                        # except:
+                        #     print(node_df)
+                        #     sys.exit(1)
 
                         node_values = node_df[['pos_x', 'pos_y']].values
 
