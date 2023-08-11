@@ -66,12 +66,12 @@ python train.py --eval_every 10 --vis_every 1 --train_data_dict <dataset>_train.
 
 In Edinburgh dataset case, the command is:
 ```
-python train.py --eval_every 10 --vis_every 1 --train_data_dict edin_train.pkl --eval_data_dict edin_val.pkl --offline_scene_graph yes --preprocess_workers 5 --log_dir ../experiments/pedestrians/models --log_tag edin_1 --train_epochs 100 --augment --conf ../experiments/pedestrians/models/edin_attention_radius_3/config.json
+python train.py --eval_every 10 --vis_every 1 --train_data_dict edin2_train.pkl --eval_data_dict edin2_val.pkl --offline_scene_graph yes --preprocess_workers 2 --log_dir ../experiments/pedestrians/models --log_tag edin_1 --train_epochs 20 --augment --conf ../experiments/pedestrians/models/edin_attention_radius_3/config.json --batch_size 10
 ```
 
 For example, a fully-fleshed out version of this command to train a model without dynamics integration for evaluation on the ETH - University scene would look like:
 ```
-python train.py --eval_every 10 --vis_every 1 --train_data_dict eth_train.pkl --eval_data_dict eth_val.pkl --offline_scene_graph yes --preprocess_workers 5 --log_dir ../experiments/pedestrians/models --log_tag _eth_vel_ar3 --train_epochs 100 --augment --conf ../experiments/pedestrians/models/eth_vel/config.json
+python train.py --eval_every 10 --vis_every 1 --train_data_dict eth_train.pkl --eval_data_dict eth_val.pkl --offline_scene_graph yes --preprocess_workers 2 --log_dir ../experiments/pedestrians/models --log_tag _eth_vel_ar3 --train_epochs 100 --augment --conf ../experiments/pedestrians/models/eth_vel/config.json
 ```
 What this means is to train a new Trajectron++ model which will be evaluated every 10 epochs, have a few outputs visualized in Tensorboard every 1 epoch, use the `eth_train.pkl` file as the source of training data (which actually contains the four other datasets, since we train using a leave-one-out scheme), and evaluate the partially-trained models on the data within `eth_val.pkl`. Further options specify that we want to perform a bit of preprocessing to make training as fast as possible (`--offline_scene_graph yes`), use 5 threads to parallelize data loading, save trained models and Tensorboard logs to `../experiments/pedestrians/models`, mark the created log directory with an additional `_eth_vel_ar3` at the end, run training for 100 epochs, augment the dataset with rotations (`--augment`), and use the same model configuration as in the model we previously trained for the ETH dataset without any dynamics integration (`--conf ../experiments/pedestrians/models/eth_vel/config.json`).
 

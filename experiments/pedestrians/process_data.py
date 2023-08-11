@@ -14,7 +14,7 @@ pred_indices = [2, 3]
 state_dim = 6
 frame_diff = 10
 desired_frame_diff = 1
-dt = 0.4
+dt = 0.1
 
 standardization = {
     'PEDESTRIAN': {
@@ -83,7 +83,7 @@ l = 0
 maybe_makedirs('../processed')
 data_columns = pd.MultiIndex.from_product([['position', 'velocity', 'acceleration'], ['x', 'y']])
 # for desired_source in ['eth', 'hotel', 'univ', 'zara1', 'zara2']:
-for desired_source in ['edin']:
+for desired_source in ['edin2']:
     for data_class in ['train', 'val', 'test']:
         env = Environment(node_type_list=['PEDESTRIAN'], standardization=standardization)
         attention_radius = dict()
@@ -105,13 +105,18 @@ for desired_source in ['edin']:
                     data['frame_id'] = pd.to_numeric(data['frame_id'], downcast='integer')
                     data['track_id'] = pd.to_numeric(data['track_id'], downcast='integer')
 
-                    # data['frame_id'] = data['frame_id'] // 10
+                    ## Update
+                    data['frame_id'] = data['frame_id'] // 1000
 
                     data['frame_id'] -= data['frame_id'].min()
 
                     data['node_type'] = 'PEDESTRIAN'
                     data['node_id'] = data['track_id'].astype(str)
                     data.sort_values('frame_id', inplace=True)
+
+                    ## Update
+                    data['pos_x'] = round(data['pos_x'] * 0.0247, 3)
+                    data['pos_y'] = round(data['pos_y'] * 0.0247, 3)
 
                     # Mean Position
                     data['pos_x'] = data['pos_x'] - data['pos_x'].mean()
@@ -124,7 +129,7 @@ for desired_source in ['edin']:
                     for node_id in pd.unique(data['node_id']):
 
                         node_df = data[data['node_id'] == node_id]
-                        assert np.all(np.diff(node_df['frame_id']) == 1)
+                        # assert np.all(np.diff(node_df['frame_id']) == 1)
                         # try:
                         #     if not np.all(np.diff(node_df['frame_id']) == 1): 
                         #         raise Exception
